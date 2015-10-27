@@ -11,8 +11,7 @@ npm install couch2elastic4sync -g
 
 ## Usage
 
-(rc)[http://npm.im/rc] to set to variable. For example, create a .couch2elastic4sync file with the following
-
+[rc](http://npm.im/rc) is used to set to variables. For example, create a .couch2elastic4sync file with the following
 
     database=http://localhost:5984/idx-edm-v5
     elasticsearch=http://elastic-1.com:9200/idx-edm-v5/listing
