@@ -7,7 +7,8 @@ var lastLine = require('last-line')
 
 var config = require('rc')('couch2elastic4sync', {
   addRaw: false,
-  bunyan_base_path: '/tmp/couch2elastic4sync'
+  bunyan_base_path: '/tmp/couch2elastic4sync',
+  end_on_catchup: false
 })
 if (!config.elasticsearch) {
   console.log('No elasticsearch search.')
@@ -28,12 +29,13 @@ if (config._[0] === 'load') {
   getLastChange(config, function (err, since) {
     if (err) {
       console.log('an error occured', err)
-      console.log('using since = now')
+      console.log('since: now')
       since = null
     }
-    else console.log('using since = ', since)
-    console.log('now logging to: ', getLogPath(config))
-    require('../lib')(config.database, config.elasticsearch, config.mapper, config.addRaw, log, since)
+    else console.log('since:', since)
+    console.log('end_on_catchup:', config.end_on_catchup)
+    console.log('logging to:', getLogPath(config))
+    require('../lib')(config.database, config.elasticsearch, config.mapper, config.addRaw, log, since, config.end_on_catchup)
   })
 }
 
