@@ -31,19 +31,21 @@ if (config._[0] === 'load') {
       console.log('since: now')
       since = null
     }
-    else console.log('since:', since)
+    else {
+      console.log('since:', since)
+    }
     console.log('end_on_catchup:', config.end_on_catchup)
     console.log('logging to:', getLogPath(config))
     require('../lib')(config.database, config.elasticsearch, config.mapper, config.addRaw, log, since, config.end_on_catchup)
   })
 }
 
-function getLogPath (config) {
+function getLogPath(config) {
   var filename = md5(config.elasticsearch) + '.log'
   return path.resolve(config.bunyan_base_path, filename)
 }
 
-function getLogFile (config) {
+function getLogFile(config) {
   mkdirp.sync(config.bunyan_base_path)
   var filename = md5(config.elasticsearch) + '.log'
   var where = path.resolve(config.bunyan_base_path, filename)
@@ -51,23 +53,26 @@ function getLogFile (config) {
   var log = bunyan.createLogger({
     name: 'couch2elastic4sync',
     streams: [{
-        path: where
+      path: where
     }]
   })
   return log
 }
 
-function getLastChange (config, cb) {
+function getLastChange(config, cb) {
   var logpath = getLogPath(config)
   lastLine(logpath, function (err, res) {
-    if (err) return cb(err)
+    if (err) {
+      return cb(err)
+    }
 
     try {
       var last_log = JSON.parse(res)
       cb(null, last_log.change)
 
-    } catch(e) { cb(e) }
-
+    } catch (e) {
+      cb(e)
+    }
   })
 }
 
@@ -78,4 +83,3 @@ function getSince(config, cb) {
     getLastChange(config, cb)
   }
 }
-
