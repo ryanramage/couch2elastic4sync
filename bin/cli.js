@@ -25,8 +25,7 @@ if (config._[0] === 'load') {
   var load = require('../lib/load')(config.database, config.elasticsearch, config.mapper, config.addRaw, log)
   load.pipe(process.stdout)
 } else {
-
-  getLastChange(config, function (err, since) {
+  getSince(config, function (err, since) {
     if (err) {
       console.log('an error occured', err)
       console.log('since: now')
@@ -71,3 +70,12 @@ function getLastChange (config, cb) {
 
   })
 }
+
+function getSince(config, cb) {
+  if (config.since) {
+    cb(null, config.since)
+  } else {
+    getLastChange(config, cb)
+  }
+}
+
