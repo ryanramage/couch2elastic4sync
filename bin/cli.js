@@ -35,8 +35,7 @@ if (config._[0] === 'load') {
       console.log('an error occured', err)
       console.log('since: now')
       since = null
-    }
-    else {
+    } else {
       console.log('since:', since)
     }
     console.log('end_on_catchup:', config.end_on_catchup)
@@ -45,12 +44,12 @@ if (config._[0] === 'load') {
   })
 }
 
-function getLogPath(config) {
+function getLogPath (config) {
   var filename = md5(config.elasticsearch) + '.log'
   return path.resolve(config.bunyan_base_path, filename)
 }
 
-function getLogFile(config) {
+function getLogFile (config) {
   mkdirp.sync(config.bunyan_base_path)
   var filename = md5(config.elasticsearch) + '.log'
   var where = path.resolve(config.bunyan_base_path, filename)
@@ -64,7 +63,7 @@ function getLogFile(config) {
   return log
 }
 
-function getLastChange(config, cb) {
+function getLastChange (config, cb) {
   var logpath = getLogPath(config)
   lastLine(logpath, function (err, res) {
     if (err) {
@@ -81,7 +80,7 @@ function getLastChange(config, cb) {
   })
 }
 
-function getSince(config, cb) {
+function getSince (config, cb) {
   if (config.since) {
     cb(null, config.since)
   } else {
