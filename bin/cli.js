@@ -7,8 +7,10 @@ var lastLine = require('last-line')
 
 var config = require('rc')('couch2elastic4sync', {
   addRaw: false,
+  rawField: 'raw',
   bunyan_base_path: '/tmp/couch2elastic4sync',
   end_on_catchup: false,
+  removeMeta: true,
   load: {
     swallowErrors: false
   }
@@ -25,7 +27,7 @@ if (config.mapper && typeof config.mapper === 'string') {
 var log = getLogFile(config)
 
 if (config._[0] === 'load') {
-  var load = require('../lib/load')(config.database, config.elasticsearch, config.mapper, config.addRaw, config.load, log)
+  var load = require('../lib/load')(config, log)
   load.pipe(process.stdout)
 } else {
   getSince(config, function (err, since) {
@@ -39,7 +41,7 @@ if (config._[0] === 'load') {
     }
     console.log('end_on_catchup:', config.end_on_catchup)
     console.log('logging to:', getLogPath(config))
-    require('../lib')(config.database, config.elasticsearch, config.mapper, config.addRaw, log, since, config.end_on_catchup)
+    require('../lib')(config, log, since)
   })
 }
 
