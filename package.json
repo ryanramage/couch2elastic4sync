@@ -1,6 +1,6 @@
 {
   "name": "couch2elastic4sync",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Sync couchdb data to elasticsearch.",
   "main": "./lib/index.js",
   "bin": "./bin/cli.js",
@@ -14,7 +14,7 @@
     "md5": "^2.0.0",
     "mkdirp": "^0.5.1",
     "ndjson": "^1.4.2",
-    "ndjson-to-couchdb": "^4.1.0",
+    "ndjson-to-couchdb": "^4.1.2",
     "rc": "^1.1.2",
     "through2": "^2.0.0"
   },

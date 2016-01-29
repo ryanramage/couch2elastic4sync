@@ -10,7 +10,7 @@ var config = require('rc')('couch2elastic4sync', {
   bunyan_base_path: '/tmp/couch2elastic4sync',
   end_on_catchup: false,
   load: {
-
+    swallowErrors: false
   }
 })
 if (!config.elasticsearch) {
