@@ -14,7 +14,7 @@
     "md5": "^2.0.0",
     "mkdirp": "^0.5.1",
     "ndjson": "^1.4.2",
-    "ndjson-to-couchdb": "^4.0.0",
+    "ndjson-to-couchdb": "^4.1.0",
     "rc": "^1.1.2",
     "through2": "^2.0.0"
   },

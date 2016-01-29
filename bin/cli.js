@@ -8,7 +8,10 @@ var lastLine = require('last-line')
 var config = require('rc')('couch2elastic4sync', {
   addRaw: false,
   bunyan_base_path: '/tmp/couch2elastic4sync',
-  end_on_catchup: false
+  end_on_catchup: false,
+  load: {
+
+  }
 })
 if (!config.elasticsearch) {
   console.log('No elasticsearch search.')
@@ -22,7 +25,7 @@ if (config.mapper && typeof config.mapper === 'string') {
 var log = getLogFile(config)
 
 if (config._[0] === 'load') {
-  var load = require('../lib/load')(config.database, config.elasticsearch, config.mapper, config.addRaw, log)
+  var load = require('../lib/load')(config.database, config.elasticsearch, config.mapper, config.addRaw, config.load, log)
   load.pipe(process.stdout)
 } else {
   getSince(config, function (err, since) {
