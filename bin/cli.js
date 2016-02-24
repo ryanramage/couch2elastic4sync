@@ -10,7 +10,6 @@ var selectn = require('selectn')
 var config = require('rc')('couch2elastic4sync', {
   addRaw: false,
   rawField: 'raw',
-  bunyan_base_path: '/tmp/couch2elastic4sync',
   endOnCatchup: false,
   removeMeta: true,
   urlTemplate: false,
@@ -55,16 +54,22 @@ function getLogPath (config) {
 }
 
 function getLogFile (config) {
-  mkdirp.sync(config.bunyan_base_path)
-  var filename = md5(config.elasticsearch) + '.log'
-  var where = path.resolve(config.bunyan_base_path, filename)
+  var _b_opts = {
+    name: 'couch2elastic4sync'
+    stream: process.stdout
+  }
 
-  var log = bunyan.createLogger({
-    name: 'couch2elastic4sync',
-    streams: [{
+  if (config.bunyan_base_path) {
+    mkdirp.sync(config.bunyan_base_path)
+    var filename = md5(config.elasticsearch) + '.log'
+    var where = path.resolve(config.bunyan_base_path, filename)
+    _b_opts.stream = null
+    _b_opts.streams = [{
       path: where
     }]
-  })
+  }
+
+  var log = bunyan.createLogger(_b_opts)
   return log
 }
 
