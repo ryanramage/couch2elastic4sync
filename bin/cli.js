@@ -55,7 +55,7 @@ function getLogPath (config) {
 
 function getLogFile (config) {
   var _b_opts = {
-    name: 'couch2elastic4sync'
+    name: 'couch2elastic4sync',
     stream: process.stdout
   }
 
