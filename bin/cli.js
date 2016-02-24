@@ -4,7 +4,6 @@ var md5 = require('md5')
 var url = require('url')
 var mkdirp = require('mkdirp')
 var bunyan = require('bunyan')
-var lastLine = require('last-line')
 var jsonist = require('jsonist')
 var selectn = require('selectn')
 
@@ -69,22 +68,6 @@ function getLogFile (config) {
   return log
 }
 
-function getLastChange (config, cb) {
-  var logpath = getLogPath(config)
-  lastLine(logpath, function (err, res) {
-    if (err) {
-      return cb(err)
-    }
-
-    try {
-      var last_log = JSON.parse(res)
-      cb(null, last_log.change)
-
-    } catch (e) {
-      cb(e)
-    }
-  })
-}
 
 function getSince (config, cb) {
   if (config.since) return cb(null, config.since)
