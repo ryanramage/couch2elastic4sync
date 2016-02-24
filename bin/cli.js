@@ -9,7 +9,7 @@ var config = require('rc')('couch2elastic4sync', {
   addRaw: false,
   rawField: 'raw',
   bunyan_base_path: '/tmp/couch2elastic4sync',
-  end_on_catchup: false,
+  endOnCatchup: false,
   removeMeta: true,
   urlTemplate: false,
   load: {
