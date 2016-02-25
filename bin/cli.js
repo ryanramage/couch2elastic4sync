@@ -40,11 +40,11 @@ if (config._[0] === 'load') {
       log.info('since: now')
       since = null
     } else {
-      log('since:', since)
+      log.info('since:', since)
     }
-    log('endOnCatchup:', config.endOnCatchup)
+    log.info('endOnCatchup:', config.endOnCatchup)
     if (config.bunyan_base_path) {
-      log('logging to:', getLogPath(config))
+      log.info('logging to:', getLogPath(config))
     }
     require('../lib')(config, log, since)
   })
