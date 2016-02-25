@@ -36,14 +36,16 @@ if (config._[0] === 'load') {
 } else {
   getSince(config, function (err, since) {
     if (err) {
-      console.log('an error occured', err)
-      console.log('since: now')
+      log.error('an error occured', err)
+      log.info('since: now')
       since = null
     } else {
-      console.log('since:', since)
+      log('since:', since)
     }
-    console.log('endOnCatchup:', config.endOnCatchup)
-    console.log('logging to:', getLogPath(config))
+    log('endOnCatchup:', config.endOnCatchup)
+    if (config.bunyan_base_path) {
+      log('logging to:', getLogPath(config))
+    }
     require('../lib')(config, log, since)
   })
 }
