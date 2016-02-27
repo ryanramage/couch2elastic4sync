@@ -16,7 +16,12 @@ var config = require('rc')('couch2elastic4sync', {
   load: {
     swallowErrors: false
   },
-  checkpointSize: 20
+  concurrency: 5,
+  checkpointSize: 20,
+  retry: {
+    times: 10,
+    interval: 200
+  }
 })
 if (!config.elasticsearch) {
   console.log('No elasticsearch search.')
@@ -74,7 +79,6 @@ function getLogFile (config) {
   var log = bunyan.createLogger(_b_opts)
   return log
 }
-
 
 function getSince (config, cb) {
   if (config.since) return cb(null, config.since)

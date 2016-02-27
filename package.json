@@ -5,6 +5,7 @@
   "main": "./lib/index.js",
   "bin": "./bin/cli.js",
   "dependencies": {
+    "async": "^1.5.2",
     "bunyan": "^1.5.1",
     "follow": "^0.12.1",
     "hyperquest": "^1.2.0",
