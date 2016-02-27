@@ -16,14 +16,11 @@ var config = require('rc')('couch2elastic4sync', {
   load: {
     swallowErrors: false
   },
+  concurrency: 5,
   checkpointSize: 20,
   retry : {
     times: 10,
     interval: 200
-  },
-  shutdown: {
-    times: 5,
-    interval: 2000
   }
 })
 if (!config.elasticsearch) {
