@@ -18,7 +18,7 @@ var config = require('rc')('couch2elastic4sync', {
   },
   concurrency: 5,
   checkpointSize: 20,
-  retry : {
+  retry: {
     times: 10,
     interval: 200
   }
@@ -79,7 +79,6 @@ function getLogFile (config) {
   var log = bunyan.createLogger(_b_opts)
   return log
 }
-
 
 function getSince (config, cb) {
   if (config.since) return cb(null, config.since)
