@@ -31,7 +31,8 @@ if (!config.elasticsearch) {
 if (config.mapper && typeof config.mapper === 'string') {
   config.mapper = require(path.resolve(config.mapper))
 }
-config.seq_url = url.resolve(config.elasticsearch, '/' + url.parse(config.elasticsearch).pathname.split('/')[1] + '/_mapping/seq')
+var index_name = url.parse(config.elasticsearch).pathname.split('/')[1]
+config.seq_url = url.resolve(config.elasticsearch, '/' + index_name + '/_mapping/seq')
 
 var log = getLogFile(config)
 
@@ -39,7 +40,7 @@ if (config._[0] === 'load') {
   var load = require('../lib/load')(config, log)
   load.pipe(process.stdout)
 } else {
-  getSince(config, function (err, since) {
+  getSince(config, index_name, function (err, since) {
     if (err) {
       log.error('an error occured', err)
       log.info('since: now')
@@ -80,11 +81,11 @@ function getLogFile (config) {
   return log
 }
 
-function getSince (config, cb) {
+function getSince (config, index_name, cb) {
   if (config.since) return cb(null, config.since)
   jsonist.get(config.seq_url, function (err, data) {
     if (err) return cb(err)
-    var seq = selectn('idx-edm-v5.mappings.seq._meta.seq', data)
+    var seq = selectn(index_name + '.mappings.seq._meta.seq', data)
     if (!seq) return cb('no seq number in elasticsearch at ' + config.seq_url)
     return cb(null, seq)
   })
