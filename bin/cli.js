@@ -37,7 +37,9 @@ config.seq_url = url.resolve(config.elasticsearch, '/' + index_name + '/_mapping
 var log = getLogFile(config)
 
 if (config._[0] === 'load') {
-  var load = require('../lib/load')(config, log)
+  var load = require('../lib/load')(config, log, function onDone (err) {
+    if (err) log.error('An error occured', err)
+  })
   load.pipe(process.stdout)
 } else {
   getSince(config, index_name, function (err, since) {
