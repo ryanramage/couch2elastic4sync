@@ -53,6 +53,8 @@ if (config._[0] === 'load') {
     log.info('endOnCatchup:', config.endOnCatchup)
     if (config.bunyan_base_path) {
       log.info('logging to:', getLogPath(config))
+    } else if (config.bunyan_log_stderr) {
+      log.info('logging to stderr')
     }
     require('../lib')(config, log, since)
   })
@@ -68,8 +70,9 @@ function getLogFile (config) {
     name: 'couch2elastic4sync',
     stream: process.stdout
   }
-
-  if (config.bunyan_base_path) {
+  if (config.bunyan_log_stderr) {
+    _b_opts.stream = process.stderr
+  } else if (config.bunyan_base_path) {
     mkdirp.sync(config.bunyan_base_path)
     var filename = md5(config.elasticsearch) + '.log'
     var where = path.resolve(config.bunyan_base_path, filename)
