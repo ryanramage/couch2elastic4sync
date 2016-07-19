@@ -90,7 +90,8 @@ function getSince (config, index_name, cb) {
   if (config.since) return cb(null, config.since)
   jsonist.get(config.seq_url, function (err, data) {
     if (err) return cb(err)
-    var seq = selectn(index_name + '.mappings.seq._meta.seq', data)
+    if (!data[index_name]) return cb('index name does not match')
+    var seq = selectn('mappings.seq._meta.seq', data[index_name])
     if (!seq) return cb('no seq number in elasticsearch at ' + config.seq_url)
     return cb(null, seq)
   })
