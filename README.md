@@ -46,6 +46,22 @@ To keep a sync process going, run
 couch2elastic4sync
 ```
 
+### Filter documents
+
+You can filter documents that should be loaded or kept in sync by setting a filter function in the config file.
+Example:
+```json
+{
+  "database": "http://localhost:5984/idx-edm-v5",
+  "elasticsearch": "http://elastic-1.com:9200/idx-edm-v5/listing",
+  "filter": "(doc) => doc.type === 'some-listing-type'"
+}
+```
+Just like you would expect a [CouchDB filter function](http://docs.couchdb.org/en/1.6.1/couchapp/ddocs.html#filter-functions) to behave:
+> [returning] true means that doc passes the filter rules, false means that it does not.
+
+**NB**: Make sure that your function can be parsed by [`eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#eval_as_a_string_defining_function_requires_(_and_)_as_prefix_and_suffix)
+
 ## License
 
 MIT
