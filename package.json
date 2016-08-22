@@ -1,6 +1,6 @@
 {
   "name": "couch2elastic4sync",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "description": "Sync couchdb data to elasticsearch.",
   "main": "./lib/index.js",
   "bin": "./bin/cli.js",
