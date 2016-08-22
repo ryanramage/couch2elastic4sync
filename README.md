@@ -46,6 +46,25 @@ To keep a sync process going, run
 couch2elastic4sync
 ```
 
+### Format and filter documents
+
+A `mapper` function can be passed from the config to format documents before being put to ElasticSearch:
+```ini
+database=http://localhost:5984/idx-edm-v5
+elasticsearch=http://elastic-1.com:9200/idx-edm-v5/listing
+mapper=path/to/my-mapper.js
+```
+
+Where my-mapper.js could be something like
+```
+module.exports = function (doc) {
+  // apply formatting here
+  return doc
+}
+```
+
+If the function returns empty, the document is filtered-out
+
 ## License
 
 MIT
