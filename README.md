@@ -32,6 +32,15 @@ Alternatively, the config file can be in JSON
 }
 ```
 
+You can also destructure some of the urls to help configuration management
+```ini
+couch=http://localhost:5984
+database=idx-edm-v5
+elasticsearch=http://elastic-1.com:9200
+indexName=idx-edm-v5
+indexType=listing
+```
+
 ### Load documents
 
 To load all the documents into elasticsearch, run
