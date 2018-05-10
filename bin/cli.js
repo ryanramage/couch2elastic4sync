@@ -50,8 +50,14 @@ var index_name = url.parse(config.elasticsearch).pathname.split('/')[1]
 config.seq_url = url.resolve(config.elasticsearch, '/' + index_name + '/_mapping/seq')
 
 var log = getLogFile(config)
-
-if (config._[0] === 'load') {
+if (config._[0] === 'id') {
+  var id = config._[1]
+  var one = require('../lib/one')(config, log, id, function onDone (err) {
+    if (err) log.error('An error occured', err)
+  })
+  one.pipe(process.stdout)
+}
+else if (config._[0] === 'load') {
   var load = require('../lib/load')(config, log, function onDone (err) {
     if (err) log.error('An error occured', err)
   })

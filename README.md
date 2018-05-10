@@ -55,6 +55,14 @@ To keep a sync process going, run
 couch2elastic4sync
 ```
 
+### Load just one doc
+
+```
+couch2elastic4sync id 19404098
+```
+
+where it is the id from couch
+
 ### Format and filter documents
 
 A `mapper` function can be passed from the config to format documents before being put to ElasticSearch:
