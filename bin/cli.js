@@ -57,6 +57,12 @@ if (config._[0] === 'id') {
   })
   one.pipe(process.stdout)
 }
+else if (config._[0] === 'cleanup') {
+  require('../lib/cleanup')(config, log, function onDone (err) {
+    if (err) log.error('An error occured', err)
+    console.log('complete')
+  })
+}
 else if (config._[0] === 'load') {
   var load = require('../lib/load')(config, log, function onDone (err) {
     if (err) log.error('An error occured', err)
