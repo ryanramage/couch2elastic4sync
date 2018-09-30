@@ -63,15 +63,6 @@ couch2elastic4sync id 19404098
 
 where it is the id from couch
 
-### Cleanup deleted docs
-
-Sometimes there are docs in elasticsearch, that dont match any docs in couch. This task cleans those up (removes them) from elasticsearch.
-
-
-```
-couch2elastic4sync cleanup
-```
-
 
 ### Format and filter documents
 
