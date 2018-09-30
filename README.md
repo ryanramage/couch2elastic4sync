@@ -63,6 +63,16 @@ couch2elastic4sync id 19404098
 
 where it is the id from couch
 
+### Cleanup deleted docs
+
+Sometimes there are docs in elasticsearch, that dont match any docs in couch. This task cleans those up (removes them) from elasticsearch.
+
+
+```
+couch2elastic4sync cleanup
+```
+
+
 ### Format and filter documents
 
 A `mapper` function can be passed from the config to format documents before being put to ElasticSearch:
@@ -81,6 +91,27 @@ module.exports = function (doc) {
 ```
 
 If the function returns empty, the document is filtered-out
+
+### Template URLs and Templated Index Names
+A lodash template can be used based on document logic to define a elastic URL. This allows for different servers, index names and types to be defined based on the couch document or document returned from the mapper.
+```
+couch=http://localhost:5984
+database=idx-edm
+elasticsearch=http://<% if(doc_type === \'v5Doc\' ) { %>elastic-1.com:9200/idx-edm-v5/listing<% } else { %>elastic-1.com:9200/idx-edm-v6/listing<% } %>
+urlTemplate=true
+```
+
+### Sync last Seq
+The last seen Seq number is now saved in a elastic index called .couch2elastic4sync. If elastic is not configured (default) to create missing indexes, you will need
+to manually create this index. Alternatively you can change the config and provide a alternate index name under which the tracking information will be saved. A unique
+document is created for each url or urltemplate and couchdb configuration. 
+```
+couch=http://localhost:5984
+database=idx-edm
+elasticsearch=http://<% if(doc_type === \'v5Doc\' ) { %>elastic-1.com:9200/idx-edm-v5/listing<% } else { %>elastic-1.com:9200/idx-edm-v6/listing<% } %>
+urlTemplate=true
+seqIndex=.couchdbSyncConfig
+```
 
 ## License
 
