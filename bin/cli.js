@@ -16,6 +16,7 @@ var config = require('rc')('couch2elastic4sync', {
   load: {
     swallowErrors: false
   },
+  seqIndex: '.couch2elastic4sync',
   concurrency: 5,
   checkpointSize: 20,
   retry: {
@@ -46,8 +47,14 @@ if (config.couch) config.database = config.couch + '/' + config.database
 // join them together to make the complete url
 if (config.indexName && config.indexType) config.elasticsearch = config.elasticsearch + '/' + config.indexName + '/' + config.indexType
 
-var index_name = url.parse(config.elasticsearch).pathname.split('/')[1]
-config.seq_url = url.resolve(config.elasticsearch, '/' + index_name + '/_mapping/seq')
+config.elasticsearchHash = md5(config.elasticsearch);
+
+// allow seqKey to be provided from config for multiple sync from the same couchdb and destination with different tracking
+// if not provided, use elasticUrl hash or template hash and couchDbName
+var couchDbName = url.parse(config.database).pathname.split('/')[1]
+if(!config.seqKey) config.seqKey = config.elasticsearchHash + '_' + couchDbName
+
+config.seq_url = url.resolve(config.elasticsearch, '/' + config.seqIndex + '/listing/' + config.seqKey)
 
 var log = getLogFile(config)
 if (config._[0] === 'id') {
@@ -57,13 +64,19 @@ if (config._[0] === 'id') {
   })
   one.pipe(process.stdout)
 }
+else if (config._[0] === 'cleanup') {
+  require('../lib/cleanup')(config, log, function onDone (err) {
+    if (err) log.error('An error occured', err)
+    console.log('complete')
+  })
+}
 else if (config._[0] === 'load') {
   var load = require('../lib/load')(config, log, function onDone (err) {
     if (err) log.error('An error occured', err)
   })
   load.pipe(process.stdout)
 } else {
-  getSince(config, index_name, function (err, since) {
+  getSince(config, function (err, since) {
     if (err) {
       log.error('an error occured', err)
       log.info('since: now')
@@ -82,7 +95,7 @@ else if (config._[0] === 'load') {
 }
 
 function getLogPath (config) {
-  var filename = md5(config.elasticsearch) + '.log'
+  var filename = config.elasticsearchHash + '.log'
   return path.resolve(config.bunyan_base_path, filename)
 }
 
@@ -95,7 +108,7 @@ function getLogFile (config) {
     _b_opts.stream = process.stderr
   } else if (config.bunyan_base_path) {
     mkdirp.sync(config.bunyan_base_path)
-    var filename = md5(config.elasticsearch) + '.log'
+    var filename = config.elasticsearchHash + '.log'
     var where = path.resolve(config.bunyan_base_path, filename)
     _b_opts.stream = null
     _b_opts.streams = [{
@@ -107,13 +120,15 @@ function getLogFile (config) {
   return log
 }
 
-function getSince (config, index_name, cb) {
+function getSince (config, cb) {
   if (config.since) return cb(null, config.since)
   jsonist.get(config.seq_url, function (err, data) {
     if (err) return cb(err)
-    if (!data[index_name]) return cb('index name does not match')
-    var seq = selectn('mappings.seq._meta.seq', data[index_name])
-    if (!seq) return cb('no seq number in elasticsearch at ' + config.seq_url)
+    var seq = selectn('_source.seq', data)
+    if (!seq) {
+      config.noCheckPoint = true
+      return cb('no seq number in elasticsearch at ' + config.seq_url)
+    }
     return cb(null, seq)
   })
 }
