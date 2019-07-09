@@ -21,7 +21,8 @@ var config = require('rc')('couch2elastic4sync', {
   retry: {
     times: 10,
     interval: 200
-  }
+  },
+  maxQueueSize: 5000
 })
 if (!config.elasticsearch) {
   console.log('No elasticsearch search.')
